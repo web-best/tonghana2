@@ -1,0 +1,310 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Untitled Document</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+window.j3 = jQuery.noConflict(true);
+j3(document).ready(function(){
+	j3('#contents').attr("id","mcontents");
+	var liObj=j3("#mBannerGR #dataList li");
+	var btnCont=j3("#mBannerGR .btns");
+	var imgCont=j3("#mBannerGR #imgWrap");
+	var imgContli=j3("#mBannerGR #imgWrap li");
+	var timer="";
+	var count=0;
+	var dir=-1;
+	imgCont.find("li").width(j3(window).width());
+	var aniW=imgCont.find("li").width();
+	btnLoad();
+	startHtml(count);
+	rollAuto();	 
+
+	j3(window).resize(function(){
+		clearInterval(timer);
+		imgCont.find("li").width(j3(window).width());
+		aniW=imgCont.find("li").width();
+		startHtml(count);
+		rollAuto();	
+	});
+
+	//인디케이트 처리 1회
+	function btnLoad(){
+		var atags="";
+		for(var i=0; i< liObj.length; i++){
+			atags+="<a href=\"\"></a>";
+		}
+		btnCont.html(atags);
+	}
+
+	function startHtml(count){
+		//새로고침변수항목			
+		imgConHeight();
+	}
+
+	function imgConHeight(){	 //배너높이 잡고 데이터로딩 후 버튼 활성화
+		if(aniW >= 1000){
+			imgCont.find("li").height(681);
+		}else{
+			imgCont.find("li").height(aniW*0.7);
+		}
+
+		if(dir===-1){
+			dataLoad(count, "last-child"); 
+		}else{
+			dataLoad(count, "first-child"); 
+		}
+		
+		btnAct(count);
+	}
+
+	//인디케이트 활성화 
+	function btnAct(c){  
+		btnCont.find("a").removeClass("active"); 
+		btnCont.find("a").eq(c).addClass("active");
+ 	}
+
+	function aniRoll(dir){ //애니메이션 후 순환 원상복귀 
+		imgCont.stop(true, true).animate({"marginLeft":dir*aniW+parseInt(imgCont.css('margin-left'))},800,function(){ 
+			if(dir==-1){  
+				j3("li:first-child",this).appendTo(j3(this)); 
+			}else{ 
+				j3("li:last-child", this).prependTo(j3(this)); 
+			}
+			imgCont.css("margin-left",-aniW);  
+		});
+	} ////aniRoll
+
+	function dataLoad(c, pos){  //배너데이터로딩
+		imgCont.find("li:"+pos).html(liObj.eq(c).html());  
+	}
+
+	function rollAuto(){
+		timer=setInterval(function(){
+			aniRoll(dir);
+			countUpDown(dir); //카운트 증식       	
+		}, 3000);
+	}
+	
+	function countUpDown(dir){
+		if(dir===-1){ 
+			if(count<liObj.length-1) count++; else count=0;	
+				dataLoad(count, "last-child"); 	
+		}else{
+			if(count>0) count--;   else  count=liObj.length-1;
+			dataLoad(count, "first-child");
+		}
+		btnAct(count);
+	}
+
+	j3("#mBannerGR .btnL,#mBannerGR  .btnR").click(function(e) { 
+	//앞뒤버튼을 클릭했다면
+		e.preventDefault();
+		clearInterval(timer);
+		//play모양으로 노출(자동롤링멈춤)
+		//제이쿼리  1.6이상서부터  attr과 분가함
+		if(j3(this).hasClass("btnR")){
+		//오른쪽 버튼
+			dir=-1;
+		}else{
+			dir=1;
+		} 
+		aniRoll(dir); //왼쪽방향으로 
+		countUpDown(dir);  
+		rollAuto();
+	});
+	
+	j3("#mBannerGR .btnWrap a").click(function(e) { //버튼리스트
+		//위의 태그로   if실행 자동롤링멈춤
+		e.preventDefault();
+		clearInterval(timer);
+		count=j3(this).index(); 
+		//버튼과 테이터동시 연동시킬 변수  count에 대입해서 쓴다.
+		dir=-1;
+		btnAct(count); //버튼활성화  
+		dataLoad(count, "last-child");
+		aniRoll(dir);  
+		rollAuto();
+	});
+
+	var x = 0;
+	var isMove = false;
+	var clickedIdx = 0;
+	imgContli.on( "mousedown touchstart", function(e){
+	e.preventDefault(); 
+	x = e.pageX || e.originalEvent.changedTouches[0].pageX; //스타트좌표담기
+	isMove = false;
+}).on( "mouseup touchend", function(e){
+	var endX = e.pageX || e.originalEvent.changedTouches[0].pageX; //스톱좌표담기
+	if(Math.abs(endX - x) > 100){ //스타트와 스톱정도계산
+		if( x > endX ){ //왼쪽
+			dir=-1;
+		} else { //오른쪽
+			dir=1;
+		}
+		isMove = true;
+		clearInterval(timer);
+		aniRoll(dir);
+		countUpDown(dir);
+		}
+		if(!isMove){ //좌우좌표차이발생이 안일어나면
+			//location.href=j3("a",this).attr('href'); //넘기기
+		}
+	}).on('click', function(e){
+		if(isMove){ //좌우좌표발생하면
+			e.preventDefault();
+			return false;
+		}
+	});
+});
+</script>
+</head>
+
+<body>
+<div  class=" mid-0" id="mBannerGR">
+
+	<style>
+	body, ul, li, p, div, header, section, article, footer, h1, h2, h3{
+		margin:0;
+		padding:0;
+	}
+	ul, li{list-style:none;}
+	a{text-decoration:none; color:black;}
+	
+    .rel{ position:relative;}
+    .abs{ position:absolute;}
+    
+    #mBannerGR .bannerWrap, 
+    #mBannerGR .bannerWrap #imgWrap li{
+        /*자신의 배너너비*/
+    }
+    #mBannerGR .bannerWrap{
+        overflow:hidden;
+    }
+    #mBannerGR .bannerWrap #imgWrap{
+        width:100000px;
+        overflow:hidden;
+        margin-left:-100%; /*자신의 배너너비*/
+    }
+    #mBannerGR .bannerWrap #imgWrap li{
+        float:left;
+        height:380px;
+        text-align:center;
+        line-height:500px;
+        font-size:100px;
+        background-color:#333;
+    }
+    #mBannerGR .bannerWrap #imgWrap li a{
+        color:white;
+    }
+    #mBannerGR .bannerWrap .btnWrap{
+        width:100%;
+        text-align:center;
+        bottom:25px;
+    }
+    #mBannerGR .bannerWrap .btnWrap input#toggleBtn{
+        display:none;
+    }
+    #mBannerGR .bannerWrap .btnWrap input#toggleBtn + label.toggle{
+        display:none;
+        width: 30px;
+        height: 30px;
+        background: url(http://www.cjone.com/cjmweb/images/main/btn_banner.png) no-repeat -102px -30px;
+        cursor:pointer;
+    }
+    #mBannerGR .bannerWrap .btnWrap input#toggleBtn.chk + label.toggle{
+    /* 제이쿼리로 핸들링하기 위해서 클래스로 전환한다.*/
+      background-position:-102px 0; /*stop버튼*/
+    }
+    #mBannerGR .bannerWrap .btnWrap .btns{
+        display:inline-block;
+    }
+    #mBannerGR .bannerWrap .btnWrap .btns a{
+        display:inline-block;
+        height:30px;
+        width:26px;
+        background: url(http://www.cjone.com/cjmweb/images/main/btn_banner.png) no-repeat -130px 0;
+    }
+    #mBannerGR .bannerWrap .btnWrap .btns a.active{
+        background-position:-130px -30px;
+    }
+    #mBannerGR .bannerWrap a.btnL, .bannerWrap a.btnR{ 
+        display:block;
+        position: absolute;
+        top: 50%;
+        margin-top: -39px;
+        outline: 0;
+        width: 82px;
+        height: 78px;
+        text-indent: -9999px;
+        z-index: 9999;
+    }
+    #mBannerGR .bannerWrap a.btnL{
+        left: 0;
+        background: url(http://www.psnmarketing.com/resources/w/img/main/btn_slide_prev.png) no-repeat 0 50%;
+    }
+    #mBannerGR .bannerWrap a.btnR{
+        right: 0;
+        background: url(http://www.psnmarketing.com/resources/w/img/main/btn_slide_next.png) no-repeat 0 50%;
+    }
+    #mBannerGR .bannerWrap #dataList{
+        display:none;
+    }
+    #mBannerGR .bannerWrap #dataList li{}
+    #mBannerGR .bannerWrap ul#dataList li a{}
+    
+    /* 증가되는 만큼 추가해서 사용하시면 되요 a.data6... 요렇게*/
+    #mBannerGR a.dataimg{
+        display:block;
+        width:100%;
+        height:100%;
+        background-position:center;
+        background-repeat:no-repeat;
+        background-size:cover;
+    }
+    #mBannerGR a.data0{
+        background-image:url("http://xhddlf12.dothome.co.kr/image/slide_img_1.jpg");
+    }
+    #mBannerGR a.data1{
+        background-image:url("http://xhddlf12.dothome.co.kr/image/slide_img_2.jpg");
+    }
+    #mBannerGR a.data2{
+        background-image:url("http://xhddlf12.dothome.co.kr/image/slide_img_3.jpg");
+    }
+    </style>
+    <div class="rel bannerWrap">
+        <ul id="imgWrap">
+            <li><a href="" class="dataimg data2"></a></li>
+            <li><a href="" class="dataimg data0"></a></li>
+            <li><a href="" class="dataimg data1"></a></li>
+        </ul>
+        <div class="abs btnWrap">
+            <input type="checkbox" id="toggleBtn">
+            <label class="toggle" for="toggleBtn"></label>
+            <div class="btns">
+                <!--순번버튼-->
+            <!--<a href="" class="active"></a>
+                <a href=""></a>
+                <a href=""></a>
+                <a href=""></a>
+                <a href=""></a>
+                <a href=""></a>
+                <a href=""></a>-->
+    
+            </div>
+        </div>
+        <!--앞뒤버튼-->
+        <a href="" class="abs btnL"></a>
+        <a href="" class="abs btnR"></a>
+        <!--여기가 진짜-->
+        <ul id="dataList">
+            <li><a href="#none" class="data0 dataimg"></a></li>
+            <li><a href="#none"  class="data1 dataimg"></a></li>
+            <li><a href="#none"  class="data2 dataimg"></a></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

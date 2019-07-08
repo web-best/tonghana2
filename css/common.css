@@ -1,0 +1,538 @@
+@charset "utf-8";
+*{box-sizing:border-box;}
+html,
+body,
+ul,
+li,
+p,
+div,
+h1,
+h2,
+h3,
+header,
+section,
+article,
+footer {
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif;
+	font-size: 1em;
+}
+
+header,
+section,
+article,
+footer,
+div {
+	box-sizing: border-box;
+}
+
+ul, li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+img{
+	max-width: 100%;
+	outline:none;
+	border:none;
+}
+iframe{
+    border-width: 0px;
+}
+.wrap {
+	max-width: 1200px;
+	margin: 0 auto;
+	overflow: hidden;
+	position:relative;
+}
+
+.header {
+	position: fixed;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 5;
+	/*padding: 7px 0;*/
+	background-color: white;
+}
+
+.nav-wrap{
+	width:80%;
+	margin:0 auto;
+	/*padding:7px 0;*/
+	position:relative;
+}
+
+.nav-wrap::after{
+	content:"";
+	clear:both;
+	display:block;
+}
+
+.header h1 {
+	float: left;
+	margin-top:9px;
+	/*padding-top:3px;*/
+}
+
+.header h1 a {
+	display: block;
+}
+
+#gnb {
+	float: right;
+	width: 80%;
+	/*margin-top: 33px;*/
+	position:relative;
+}
+
+#gnb:after {
+	content: "";
+	clear: both;
+	display: block;
+}
+
+#gnb > li {
+	float: left;
+	width: 25%;
+	text-align: center;
+	position: relative;
+	font-size: 1.125em;
+	
+	/*line-height: 2em;*/
+}
+
+#gnb > li a {
+	display: block;
+}
+
+#gnb > li > a {
+	padding:40px 0;
+	font-weight:bold;
+}
+#gnb > li:hover > a {
+	color: #624D83;
+}
+/*
+.submenu 위 세모모양
+#gnb > li:hover a::before{
+	content:"";
+	position:absolute;
+	z-index:1000;
+	display:block;
+	width:0;
+	height:0;
+	border-color:transparent transparent blue transparent;
+	border-style:solid;
+	border-width:0 0 30px 0;
+	bottom:0;
+	left:0;
+}
+*/
+#gnb > li > a::after{
+	content:"";
+	display:block;
+	height:2px;
+	background-color:#624D83;
+	position:relative;
+	bottom:-2px;
+	width:0;
+	transition:width 0.5s;
+	margin:0 auto;
+}
+#gnb > li:hover > a::after{
+	width:45%;
+}
+#gnb li .submenu {
+	position: absolute;
+	display:none;
+	z-index: 1000;
+	width: 100%;
+	/*height: 0;*/
+	left: 0;
+	/*overflow: hidden;*/
+	background-color:white;
+	opacity:0;
+	transition:opacity 0.8s;
+	-webkit-transition:opacity 0.8s;
+	-moz-transition:opacity 0.8s;
+	-ms-transition:opacity 0.8s;
+	-o-transition:opacity 0.8s;
+	
+	/*top:55px;*/
+}
+#gnb li:hover .submenu {
+	display:block;
+	opacity:1;
+}
+/*#gnb > li .angle {
+    width: 0;
+    height: 0;
+    border-width: 0 10px 20px 10px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+    margin: 0 auto;
+}*/
+
+#gnb li .submenu li{
+	border-bottom:1px solid gray;
+	background-color:black;
+}
+#gnb li .submenu li:last-child{
+	border-bottom:none;
+}
+#gnb li .submenu li:hover{
+	background-color:white;
+}
+
+#gnb li .submenu li a {
+    font-size: 0.833em;
+    line-height: 3em;
+	color:white;
+}
+#gnb li .submenu li:hover a{
+	color:black;
+}
+
+#menu-bg{
+	position: absolute;
+    width: 100%;
+    height: 0;
+    left: 0;
+    transition: height 0.8s;
+    overflow: hidden;
+    background-color: white;
+    top: 94px;
+    z-index: 1;
+}
+
+#gnb:hover + #menu-bg{
+	height:190px;
+	border-top:1px solid black;
+}
+
+/*모바일 gnb*/
+#toggleMenu{
+	margin-top:38px;
+	width:33px;
+	position:absolute;
+	z-index:5;
+	right:0;
+	
+	/*position:absolute;
+	right:1em;
+	top:50%;
+	margin-top:-15px;
+	width:30px;
+	height:30px;*/
+	
+	/*width: 33px;
+    top: 50%;
+    position: absolute;
+    right: 0;
+    transform: translateY(-50%);*/
+
+} /*toggleMenu는 input,label,div를 감싸고 있는 부모.*/
+#m-menu-btn{
+	display:none;
+}
+#m-menu-btn + label{
+	display:block;
+}
+#m-menu-btn + label > span{
+	display:block;
+	height:3px;
+	margin:4px auto;
+	background-color:black;
+	transition:0.5s;
+	opacity:1;
+	/*width:90%;*/
+}
+#m-menu-btn + label > span.on{
+	background-color:white; !important
+}
+#m-menu-btn:checked + label > span:last-child{
+	display:none;
+	opacity:0;
+}
+#m-menu-btn:checked + label > span:first-child{
+	transform:rotate(45deg);
+	top:6px;
+	position:relative;
+}
+#m-menu-btn:checked + label > span:nth-child(2){
+	transform:rotate(-45deg);
+}
+
+
+
+
+/*#m-menu-btn {
+    float: right;
+    margin-top: 30px;
+}
+#m-menu-btn > a{
+	display:block;
+}
+#m-menu-btn .line{
+	display: block;
+    width: 34px;
+    margin-top: 5px;
+    height: 3px;
+    background: black;
+}*/
+
+.header .nav-wrap .m-menu{
+	position: fixed;
+	display:none;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background-color: gray;
+	transition: all 0.8s;
+}
+#m-gnb{
+	width: 100%; /*원래 너비 안받지만 width:100%를 넣었기에 부모한테 받는것이다.*/
+    transition: all 0.3s;
+    margin-top: 90px;
+}
+#m-gnb li{
+	line-height:2em;
+	overflow:hidden;
+}
+#m-gnb li a{
+	display:block;
+	padding:0 1em;
+}
+#m-gnb li > a{
+	color:white;
+}
+#m-gnb li a.on,
+#m-gnb > li:hover > a{
+	background-color:black;
+	color:white;
+}
+#m-gnb li .m-submenu{
+	display:none;
+	background-color: dimgray;
+	transition:all 0.5s;
+}
+#m-gnb li .m-submenu.open{
+	display:block; !important
+} /*선택자(click 등)가 없을때 .m-submenu에 중복이니까 !important를 꼭 넣어주기*/
+#m-gnb li .m-submenu a{
+	display:block;
+	color:white;
+}
+@media (max-width:767px){
+	#gnb{
+		display:none;
+	}
+	#toggleMenu{
+		display:block;
+	}
+	.header .nav-wrap .m-menu.open{
+		display:block; !important
+	}
+}
+@media (min-width:768px){
+	#gnb{
+		display:block;
+	}
+	#toggleMenu{
+		display:none;
+	}
+}
+
+/*.con-wrap{
+	margin-top:95px;
+}*/
+
+.slide-wrap {
+	height: 45vw;
+	overflow: hidden;
+}
+
+#slide {
+	width: 100%;
+	height: 100%;
+	
+}
+
+#slide li {
+	float: left;
+	height:100%;
+}
+
+.contents {
+    padding-top: 8px;
+	padding-bottom: 41px;
+    /*padding: 30px 0;*/
+}
+#gnb3{
+	width: 80%;
+    margin: 0 auto;
+}
+#gnb3::after{
+	content: "";
+    clear: both;
+    display: block;
+}
+#gnb3 > li{
+	float: left;
+    overflow: hidden;
+}
+#gnb3 > li a{
+	display:block;
+}
+#gnb3 > li a::after{
+	content: "";
+    clear: both;
+    display: block;
+}
+#gnb3 > li h3 {
+    font-size: 1.3em;
+    line-height: 4em;
+    border-bottom: 3px solid #5F456C;
+    margin-bottom: 15px;
+}
+#gnb3 .con4 .movie-wrap{
+	
+}
+#gnb3 .con4 .movie-wrap iframe{
+	width:100%;
+}
+#abm-list::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+#abm-list > li {
+    float: left;
+    width: 33.333%;
+    padding:0 5px;
+}
+#abm-list > li:last-child{
+	margin-right:0;
+}
+
+#abm-list li a{
+	display:block;
+}
+
+/*#abm-list li a img {
+    box-shadow: 0 0 8px 0px black;
+}*/
+#news-list li{
+	line-height:1.5em;
+}
+#news-list li .post-title{
+	float:left;
+}
+#news-list li .news-data{
+	float:right;
+}
+
+@media (max-width:767px){
+	#gnb3 > li{
+		width:100%;
+		padding:0;
+	}
+	#news-list li{
+		font-size:1em;
+	}
+}
+@media (min-width:768px){
+	#gnb3 > li{
+		width: 33.333%;
+		padding: 0 13px;
+	}
+	#news-list li{
+		font-size:0.8125em;
+	}
+}
+
+.footer{
+	background-color: #5F456C;
+    padding: 20px 0;
+    color: white;
+	text-align:center;
+}
+/*.footer .nav-wrap > div{
+	float: left;
+    width: calc(66.667% - 33.333%);
+}*/
+.footer .company-wrap p {
+    font-size: 0.8125em;
+	line-height:1.8em;
+}
+.footer .company-wrap p span{
+	padding: 0 10px;
+}
+.footer .company-wrap p span:first-child {
+    border-right: 1px solid white;
+    padding-left: 0;
+}
+.footer .company-wrap p span:last-child {
+    padding-right: 0;
+}
+.footer .sns {
+    text-align: center;
+}
+.footer .sns a {
+	display:inline-block;
+    background-color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-left: 6px;
+}
+.footer .sns a:first-child{
+	margin-left:0;
+}
+.footer .sns a:hover {
+    background-color: #cca7a4;
+}
+.footer .sns a i {
+    top: 50%;
+    position: relative;
+    transform: translateY(-50%);
+    font-size: 1.2em;
+}
+@media (max-width:767px){
+	.footer{
+		text-align:center;
+	}
+	.footer .sns{
+		position:relative;
+	}
+	.footer .company-wrap {
+    	padding: 16px 0;
+	}
+}
+@media (min-width:768px){
+	.footer h1 {
+    	float: left;
+		margin: 7px 24px 0 0;
+	}
+	.footer .company-wrap {
+		float:left;
+		padding: 25px 0;
+	}
+	.footer .sns{
+		position:absolute;
+		z-index:2;
+		width:141px;
+		right: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		/*float:right;
+		padding: 19px 0;*/
+	}
+}
+

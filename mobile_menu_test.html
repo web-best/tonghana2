@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+<style>
+body, div, ul, li, p, h1, h2, h3, header, footer{margin:0; padding:0; font-size:100%;}
+input[type='submit'], input[type='image'], a, img{vertical-align:middle; color:#222;} /*애플막아내기*/
+img{border:none;}
+a{text-decoration:none;}
+ul, li{list-style:none;}
+
+/* max, min, %, em 단위로 표현한것은 무조건 반응형 처리한 것, 되도록 !important 쓰지 않기 */
+.center{max-width:1170px; margin:0 auto;}
+header{z-index:100;}
+.wrap{overflow:hidden;}
+#toggle{display:none;}
+#gnb li a.on,
+#gnb li:hover > a{background-color:red; color:white;}
+#gnb li .d2{background-color:rgba(0,0,0,.5); display:none;}
+#gnb li .d2 a{display:block; color:white;}
+
+@media screen and (min-width:1170px){
+
+}
+
+@media screen and (max-width:1169px){
+
+}
+
+@media screen and (min-width:768px){
+	header{position:fixed; top:0; left:0; right:0; height:100px; background-color:white;}/*모바일 높이는 80~100사이로.*/
+	header h1{float:left;}
+	#gnb{float:right;} /*소메뉴(abs)가 없으면 overflow:hidden 넣어서 처리 */
+	#gnb:after{content:""; display:block; clear:both;}/*소메뉴가 있으면 이렇게 처리*/ /*width값 처리하기 위해 넣음*/
+	#gnb li{float:left; position:relative;}
+	#gnb li > a{display:block; padding:1em 1em;} /*a태그에 display:block; padding값을 줘야 안정감 있다. header에 position:fixed와 height:100px이 이미 있기 때문에 너비,높이 안잡아줘도 된다.*/
+	#gnb li .d2{position:absolute; width:100px; left:-20px; top:30px; height:120px;}
+	#gnb li .d2 a{}
+	#gnb li:hover .d2{position:relative; display:block;}
+	header #toggle + label{display:none;}
+}
+
+@media screen and (max-width:767px){
+	header{position:relative; text-align:center;}
+	header h1{float:left;}
+	#gnb{position:absolute; left:100%; width:100%; top:60px; transition:0.3s;}/*원래 너비 안받지만 width:100%를 넣었기에 부모한테 받는것이다.*/
+	#gnb li{line-height:180%; background-color:#CCC; color:white;}/*글자사이즈에 맡기겠다라는 뜻*/
+	#gnb li a{display:block; padding:0 1em;}
+	#gnb li .d2{}
+	#gnb li .d2.open{display:block; !important} /*선택자(click 등)가 없을때 .d2에 중복이니까 !important를 꼭 넣어주기*/
+	#gnb li .d2 a{}
+	header #toggle + label{float:right; border:1px solid black;}
+	header #toggle + label:before{content:"MENU";}
+	header #toggle:checked + label:before{content:"CLOSE";}
+	header #toggle + label + #gnb{}
+	header #toggle:checked + label + #gnb{left:0;}
+}
+</style>
+
+<script
+  src="https://code.jquery.com/jquery-1.12.4.js"
+  integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+  crossorigin="anonymous"></script>
+<script>
+
+$(function(){ //화면이 열리면
+	var winW=$(window).width(); //처음 열었을 때 딱 한번만 실행
+	//처음에 화면이 작을때 바로 터져야 되니까.
+	if(winW<=767){ //window너비가 767보다 같거나 작을때 해라
+		$("#gnb li > a").click(function(e){//꺽쇠 꼭 넣기(직속). 왜냐하면 대메뉴 a에만 클릭이 되어야 되니까. 다른 a에 클릭된다고 하면 오류날 수 있다.
+			$(".d2").removeClass("open");
+			$("+.d2", this).addClass("open"); //여기서 this는 #gnb li a. 즉 $("+.d2", this) 이 말은 #gnb li a의 형제인 #gnb li .d2
+			return false; //못넘기게하기
+		});
+	}
+
+	//화면을 늘이고 줄이고 했을때 터지는 것
+	$(window).resize(function(e){ //윈도우가 resize될때마다
+		winW=$(window).width(); //사이즈를 바뀔때마다 실행
+			if(winW<=767){ //window너비가 767보다 같거나 작을때 해라
+				$("#gnb li > a").click(function(e){
+				$(".d2").removeClass("open");
+				$("+.d2", this).addClass("open"); //여기서 this는 #gnb li a
+				return false; //원래 기능(click 기능)이 안되게 하기. 못넘기게하기
+			});
+		};
+	});
+});
+
+</script>
+
+</head>
+
+
+
+<body>
+
+<div class="wrap">
+	<header>
+    	<div class="center"> <!--가운데 정렬 처리-->
+        	<h1><a href="/">로고</a></h1> <!--제일바깥쪽으로 나가시오-->
+            <input type="checkbox" id="toggle">
+            <label title="전체메뉴" for="toggle"></label><!--button을 통해서 ul을 핸들링 하기 위해 이 위치에 있음. 중간에 내용을 안넣은 이유는 가상으로 button에 focus했을 때랑 안했을 때 컨텐츠를 넣기위해-->
+            <ul id="gnb">
+            	<li>
+                	<a href="#">회사소개</a>
+                    <div class="d2">
+                    	<a href="#">회사소개1</a>
+                        <a href="#">회사소개2</a>
+                        <a href="#">회사소개3</a>
+                    </div>
+                </li>
+                <li><a href="#">상담문의</a></li>
+                <li>
+                	<a href="#">후기내용보기</a>
+                    <div class="d2">
+                    	<a href="#">후기1</a>
+                        <a href="#">후기2</a>
+                    </div>
+                </li>
+                <li><a href="#">쇼핑몰</a></li>
+            </ul>
+        </div>
+    </header>
+    <section style="height:2000px;"></section>
+</div>
+</body>
+</html>
